@@ -18,20 +18,20 @@ def score_position(game:game, piece:player):
 	score = 0
 
 	## Score Center Column
-	center_array = [int(i) for i in list(game.board[:, game.board.columns//2])]
+	center_array = [int(i) for i in list(game.board.slots[:, game.board.columns//2])]
 	center_count = center_array.count(piece)
 	score += center_count * 3
 
 	## Score Horizontal
 	for r in range(game.board.rows):
-		row_array = [int(i) for i in list(game.board[r,:])]
+		row_array = [int(i) for i in list(game.board.slots[r,:])]
 		for c in range(game.board.columns-3):
 			window = row_array[c:c+WINDOW_LENGTH]
 			score += evaluate_window(window, piece)
 
 	## Score Vertical
 	for c in range(game.board.columns):
-		col_array = [int(i) for i in list(game.board[:,c])]
+		col_array = [int(i) for i in list(game.board.slots[:,c])]
 		for r in range(game.board.rows-3):
 			window = col_array[r:r+WINDOW_LENGTH]
 			score += evaluate_window(window, piece)
@@ -39,12 +39,12 @@ def score_position(game:game, piece:player):
 	## Score Posiive Sloped Diagonal
 	for r in range(game.board.rows-3):
 		for c in range(game.board.columns-3):
-			window = [game.board[r+i][c+i] for i in range(WINDOW_LENGTH)]
+			window = [game.board.slots[r+i][c+i] for i in range(WINDOW_LENGTH)]
 			score += evaluate_window(window, piece)
 
 	for r in range(game.board.rows-3):
 		for c in range(game.board.columns-3):
-			window = [game.board[r+3-i][c+i] for i in range(WINDOW_LENGTH)]
+			window = [game.board.slots[r+3-i][c+i] for i in range(WINDOW_LENGTH)]
 			score += evaluate_window(window, piece)
 
 	return score
